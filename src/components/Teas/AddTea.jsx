@@ -39,7 +39,8 @@ function AddTea(props) {
     };
 
     setTeaModel(teaAddedModel);
-    props.onCheckCreatedNewTea(isSucces);
+
+    props.onCheckCreatedNewTea(teaAddedModel);
   };
 
   const teaNameHandler = (e) => {
@@ -63,24 +64,24 @@ function AddTea(props) {
         direction={"column"}
       >
         <TextField
-          label="Tea Name"
-          type="text"
-          variant="outlined"
+          label='Tea Name'
+          type='text'
+          variant='outlined'
           onChange={teaNameHandler}
         />
         <TextField
-          label="Quantity"
-          type="number"
-          variant="outlined"
+          label='Quantity'
+          type='number'
+          variant='outlined'
           onChange={quantityHandler}
         />
         <TextField
-          label="Price"
-          type="number"
-          variant="outlined"
+          label='Price'
+          type='number'
+          variant='outlined'
           onChange={priceHandler}
         />
-        <Button variant="contained" color="secondary" type="submit">
+        <Button variant='contained' color='secondary' type='submit'>
           Add new tea
         </Button>
       </Stack>

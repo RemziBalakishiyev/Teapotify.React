@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { useCallback, useEffect, useState } from "react";
+import useHttp from "../../hooks/http";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,35 +33,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function TeaData(props) {
   const [teas, SetTeas] = useState([]);
-  const getTeaDatas = useCallback(async () => {
-    try {
-      const response = await fetch(
-        "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json"
-      );
 
-      if (!response.ok) {
-        throw new Error("There is error!");
-      }
-      const teaDatas = await response.json();
-      const dataTeasGetModel = [];
+  const applyData = (data) => {
+    const dataTeasGetModel = [];
 
-      for (const key in teaDatas) {
-        dataTeasGetModel.push({
-          key: key,
-          teaName: teaDatas[key].teaName,
-          quantity: teaDatas[key].quantity,
-          price: teaDatas[key].price,
-        });
-      }
-      SetTeas(dataTeasGetModel);
-    } catch (error) {
-      alert(error.message);
+    for (const key in data) {
+      dataTeasGetModel.push({
+        key: key,
+        teaName: data[key].teaName,
+        quantity: data[key].quantity,
+        price: data[key].price,
+      });
     }
-  }, []);
+    SetTeas(dataTeasGetModel);
+  };
+
+  const { httpRequest: getTeaDatas } = useHttp(
+    {
+      url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
+    },
+    applyData
+  );
 
   useEffect(() => {
     getTeaDatas();
-  }, [getTeaDatas]);
+  }, []);
 
   return (
     <TableContainer

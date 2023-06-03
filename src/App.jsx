@@ -9,11 +9,9 @@ import { Box, Card } from "@mui/material";
 import AddTea from "./components/Teas/AddTea";
 
 function App() {
-  const [createdNewTea, setCreatedNewTea] = useState(false);
-  console.log("test");
+  const [createdNewTea, setCreatedNewTea] = useState({});
+  console.log("work");
   const checkCreatedNewTea = (isSucces) => {
-    console.log("v2");
-    isSucces = !isSucces;
     setCreatedNewTea(isSucces);
   };
   return (
