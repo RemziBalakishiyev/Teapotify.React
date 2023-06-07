@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo } from "react";
 import { Stack, TextField, Button } from "@mui/material";
+import useHttp from "../../hook/use-http";
 
 function AddTea(props) {
   const [enteredteaName, SetTeaName] = useState("");
@@ -7,27 +8,24 @@ function AddTea(props) {
   const [enteredPrice, SetPrice] = useState(0);
   const [teaModel, setTeaModel] = useState({});
 
-  const [isSucces, setIsSuccess] = useState(false);
+  const [teaResponse, setTeaResponse] = useState({});
+
+  const { httpRequest: addTeaDataToApi } = useHttp(
+    {
+      url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
+      method: "POST",
+      body: teaModel,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+    (data) => {
+      setTeaResponse(data);
+    }
+  );
 
   useEffect(() => {
-    const addTeaDataToApi = async (teaModel) => {
-      const response = await fetch(
-        "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
-        {
-          method: "POST",
-          body: JSON.stringify(teaModel),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = response.json();
-
-      setIsSuccess(response.ok);
-    };
-
-    addTeaDataToApi(teaModel);
+    addTeaDataToApi();
   }, [teaModel]);
 
   const addNewTea = (e) => {
@@ -39,7 +37,7 @@ function AddTea(props) {
     };
 
     setTeaModel(teaAddedModel);
-    props.onCheckCreatedNewTea(isSucces);
+    props.onCheckCreatedNewTea(teaResponse);
   };
 
   const teaNameHandler = (e) => {
@@ -63,24 +61,24 @@ function AddTea(props) {
         direction={"column"}
       >
         <TextField
-          label="Tea Name"
-          type="text"
-          variant="outlined"
+          label='Tea Name'
+          type='text'
+          variant='outlined'
           onChange={teaNameHandler}
         />
         <TextField
-          label="Quantity"
-          type="number"
-          variant="outlined"
+          label='Quantity'
+          type='number'
+          variant='outlined'
           onChange={quantityHandler}
         />
         <TextField
-          label="Price"
-          type="number"
-          variant="outlined"
+          label='Price'
+          type='number'
+          variant='outlined'
           onChange={priceHandler}
         />
-        <Button variant="contained" color="secondary" type="submit">
+        <Button variant='contained' color='secondary' type='submit'>
           Add new tea
         </Button>
       </Stack>

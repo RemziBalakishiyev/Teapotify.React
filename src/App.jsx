@@ -9,12 +9,9 @@ import { Box, Card } from "@mui/material";
 import AddTea from "./components/Teas/AddTea";
 
 function App() {
-  const [createdNewTea, setCreatedNewTea] = useState(false);
-  console.log("test");
-  const checkCreatedNewTea = (isSucces) => {
-    console.log("v2");
-    isSucces = !isSucces;
-    setCreatedNewTea(isSucces);
+  const [createdNewTea, setCreatedNewTea] = useState({});
+  const checkCreatedNewTea = (teaResponse) => {
+    setCreatedNewTea(teaResponse);
   };
   return (
     <>
@@ -43,7 +40,10 @@ function App() {
         >
           <AddTea onCheckCreatedNewTea={checkCreatedNewTea}></AddTea>
         </Card>
-        <TeaData success={createdNewTea} style={{ width: "600px" }}></TeaData>
+        <TeaData
+          loadNewTea={createdNewTea}
+          style={{ width: "600px" }}
+        ></TeaData>
       </Box>
     </>
   );

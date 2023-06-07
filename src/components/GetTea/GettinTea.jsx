@@ -4,18 +4,17 @@ import "./GettinTea.css";
 import TeaConten from "./TeaConten";
 
 const GettinTea = () => {
-  const [enable, setEnable] = useState(false);
   const onHandleEnable = () => {
-    setEnable((prevState) => !prevState);
+    const a = useOnlineStatus();
+    console.log(a);
   };
+
   return (
     <Stack sx={{ width: 500 }} useFlexGap>
       <Card sx={{ minWidth: 275 }}>
-        <CardContent className="content">
-          <Typography>
-            <TeaConten enable={false}></TeaConten>
-          </Typography>
-          <Button color="primary" variant="contained" onClick={onHandleEnable}>
+        <CardContent className='content'>
+          <Typography></Typography>
+          <Button color='primary' variant='contained' onClick={onHandleEnable}>
             Get Tea
           </Button>
         </CardContent>
