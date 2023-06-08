@@ -1,32 +1,15 @@
 import React, { useEffect, useState, memo } from "react";
 import { Stack, TextField, Button } from "@mui/material";
 import useHttp from "../../hook/use-http";
-
+import { toast } from "react-toastify";
 function AddTea(props) {
   const [enteredteaName, SetTeaName] = useState("");
   const [enteredQuantity, SetQuantity] = useState(0);
   const [enteredPrice, SetPrice] = useState(0);
   const [teaModel, setTeaModel] = useState({});
-
   const [teaResponse, setTeaResponse] = useState({});
 
-  const { httpRequest: addTeaDataToApi } = useHttp(
-    {
-      url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
-      method: "POST",
-      body: teaModel,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-    (data) => {
-      setTeaResponse(data);
-    }
-  );
-
-  useEffect(() => {
-    addTeaDataToApi();
-  }, [teaModel]);
+  const { httpRequest: addTeaDataToApi } = useHttp();
 
   const addNewTea = (e) => {
     e.preventDefault();
@@ -39,6 +22,22 @@ function AddTea(props) {
     setTeaModel(teaAddedModel);
     props.onCheckCreatedNewTea(teaResponse);
   };
+
+  useEffect(() => {
+    addTeaDataToApi(
+      {
+        url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
+        method: "POST",
+        body: teaModel,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      (data) => {
+        setTeaResponse(data);
+      }
+    );
+  }, [teaModel]);
 
   const teaNameHandler = (e) => {
     SetTeaName(e.target.value);

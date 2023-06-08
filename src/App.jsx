@@ -5,7 +5,17 @@ import "./App.css";
 import Navbar from "./components/Layout/Navbar";
 import TeaData from "./components/Teas/TeaData";
 import GettinTea from "./components/GetTea/GettinTea";
-import { Box, Card } from "@mui/material";
+import {
+  Box,
+  Card,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import AddTea from "./components/Teas/AddTea";
 
 function App() {
@@ -28,23 +38,34 @@ function App() {
         }}
         flexDirection={"column"}
       >
-        <Card
+        <Accordion
           sx={{
             minWidth: 215,
             width: 600,
             justifyContent: "center",
             alignItems: "center",
-            padding: 13,
+            padding: 5,
             margin: "10px",
           }}
         >
-          <AddTea onCheckCreatedNewTea={checkCreatedNewTea}></AddTea>
-        </Card>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <Typography align='center'>Forms</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <AddTea onCheckCreatedNewTea={checkCreatedNewTea}></AddTea>
+          </AccordionDetails>
+        </Accordion>
+
         <TeaData
           loadNewTea={createdNewTea}
           style={{ width: "600px" }}
         ></TeaData>
       </Box>
+      <ToastContainer></ToastContainer>
     </>
   );
 }
