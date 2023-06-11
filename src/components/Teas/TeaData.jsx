@@ -6,8 +6,10 @@ import {
   TableBody,
   Paper,
   styled,
+  TablePagination,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import { DotLoader } from "react-spinners";
 import { useCallback, useEffect, useState } from "react";
 import useHttp from "../../hook/use-http";
 
@@ -33,7 +35,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function TeaData(props) {
   const [teas, SetTeas] = useState([]);
+  const [rowPerPages, setRowPerPages] = useState(5);
+  const [rowPages, setRowPages] = useState(0);
 
+  const handlePage = (e, newpage) => {
+    console.log("new page", newpage);
+    console.log("per page", rowPerPages);
+    setRowPages(newpage);
+  };
+
+  const handlePerPage = (e) => {
+    setRowPerPages(e.target.value);
+    setRowPages(0);
+  };
   const transformData = (data) => {
     const dataTeasGetModel = Object.entries(data).map(([key, value]) => ({
       key: key,
@@ -42,17 +56,20 @@ export default function TeaData(props) {
     SetTeas(dataTeasGetModel);
   };
 
-  const { httpRequest: getTeaDatas } = useHttp(
-    {
-      url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
-    },
-    transformData
-  );
+  const { isLoading, httpRequest: getTeaDatas } = useHttp();
 
   useEffect(() => {
-    getTeaDatas();
-  }, [getTeaDatas, props.loadNewTea]);
+    getTeaDatas(
+      {
+        url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
+      },
+      transformData
+    );
+  }, [props.loadNewTea]);
 
+  if (isLoading) {
+    return <DotLoader color='#d714c3' size={200} />;
+  }
   return (
     <TableContainer
       component={Paper}
@@ -67,14 +84,25 @@ export default function TeaData(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {teas.map((tea) => (
-            <TableRow key={tea.key}>
-              <TableCell>{tea.teaName}</TableCell>
-              <TableCell>{tea.quantity}</TableCell>
-              <TableCell>{tea.price}$</TableCell>
-            </TableRow>
-          ))}
+          {teas
+            .slice(rowPages * rowPerPages, rowPages * rowPerPages + rowPerPages)
+            .map((tea) => (
+              <TableRow key={tea.key}>
+                <TableCell>{tea.teaName}</TableCell>
+                <TableCell>{tea.quantity}</TableCell>
+                <TableCell>{tea.price}$</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component='div'
+          count={teas.length}
+          rowsPerPage={rowPerPages}
+          page={rowPages}
+          onPageChange={handlePage}
+          onRowsPerPageChange={handlePerPage}
+        />
       </Table>
     </TableContainer>
   );

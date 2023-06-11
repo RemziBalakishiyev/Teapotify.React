@@ -1,6 +1,7 @@
 import React, { useEffect, useState, memo } from "react";
 import { Stack, TextField, Button } from "@mui/material";
 import useHttp from "../../hook/use-http";
+import useInput from "../../hook/use-input";
 
 function AddTea(props) {
   const [enteredteaName, SetTeaName] = useState("");
@@ -10,22 +11,22 @@ function AddTea(props) {
 
   const [teaResponse, setTeaResponse] = useState({});
 
-  const { httpRequest: addTeaDataToApi } = useHttp(
-    {
-      url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
-      method: "POST",
-      body: teaModel,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-    (data) => {
-      setTeaResponse(data);
-    }
-  );
+  const { httpRequest: addTeaDataToApi } = useHttp();
 
   useEffect(() => {
-    addTeaDataToApi();
+    addTeaDataToApi(
+      {
+        url: "https://teapotify-6a7aa-default-rtdb.firebaseio.com/teas.json",
+        method: "POST",
+        body: teaModel,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      (data) => {
+        setTeaResponse(data);
+      }
+    );
   }, [teaModel]);
 
   const addNewTea = (e) => {
@@ -43,7 +44,6 @@ function AddTea(props) {
   const teaNameHandler = (e) => {
     SetTeaName(e.target.value);
   };
-
   const quantityHandler = (e) => {
     SetQuantity(e.target.value);
   };
